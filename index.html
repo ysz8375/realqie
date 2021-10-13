@@ -1,1 +1,67 @@
-cs
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+    <link rel="stylesheet" type="text/css" href="Login.css" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div id="login">
+        <h1>登陆</h1>
+       
+            <input type="text" required="required" placeholder="用户名" id="u"></input>
+            <input type="password" required="required" placeholder="密码" id="p"></input>
+            <button class="but" onclick="gettwo()" type='submit'id='s'>登录</button>
+        
+    </div>
+ 
+    <script>
+         function gettwo() {
+            var name = document.getElementById("u").value
+            var pwd = document.getElementById("p").value
+            //return JSON.stringify([name,pwd])
+            return JSON.stringify({name,pwd})
+        }
+        
+
+    	//websocket connect
+    	var button = document.getElementById("s")
+    	var socket = new WebSocket("ws://81.69.240.196:2000")
+    socket.addEventListener('open', function () {
+          console.log("已连接服务器")
+          
+        })
+
+        socket.addEventListener('close', function(){
+        console.log("已退出服务器")
+         
+        })
+        socket.addEventListener('message', function(e){
+        console.log(e.data)
+        if(e.data == "done") console.log("接收到服务器的消息")
+        if(e.data=="ok"){
+        	alert("登陆成功！")
+        }else if(e.data == "not_exist"){
+        	alert("用户不存在")
+        }else if(e.data =="no"){
+        	alert("用户名或密码错误")
+        }
+         
+        })
+        
+        button.addEventListener('click', function () {
+			meg=gettwo();
+			//if(socket.readyState===1)
+            socket.send(meg);
+
+
+
+        })
+    </script>
+</body>
+
+</html>
